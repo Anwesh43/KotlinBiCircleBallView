@@ -27,7 +27,7 @@ class BiCircleBallView(ctx : Context) : View(ctx) {
 
     data class BCBState(var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0) {
 
-        private val scales : Array<Float> = arrayOf(0f, 0f, 0f)
+        val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f)
 
         fun update(stopcb : (Float) -> Unit) {
             scales[j] += dir * 0.1f
@@ -78,4 +78,38 @@ class BiCircleBallView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class BiCircleBall(var i : Int, private val state : BCBState = BCBState()) {
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            val w : Float = canvas.width.toFloat()
+            val h : Float = canvas.height.toFloat()
+            paint.color = Color.parseColor("#4CAF50")
+            paint.strokeWidth = Math.min(w, h) / 60
+            paint.strokeCap = Paint.Cap.ROUND
+            val size : Float = Math.min(w, h)/ 3
+            val r : Float = Math.min(w, h)/10
+            canvas.save()
+            canvas.translate(w/2, h/2)
+            for (i in 0..1) {
+                val x : Float = -size * state.scales[1] * state.scales[3]
+                canvas.save()
+                canvas.scale(1f - 2 * i,1f)
+                canvas.rotate(90f * state.scales[2])
+                canvas.drawLine(0f, 0f, x, 0f, paint)
+                canvas.drawCircle(x, 0f, r * state.scales[0], paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+    }
+
 }
