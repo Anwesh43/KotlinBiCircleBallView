@@ -4,6 +4,7 @@ package com.example.bicircleballview
  * Created by anweshmishra on 05/05/18.
  */
 
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -137,4 +138,11 @@ class BiCircleBallView(ctx : Context) : View(ctx) {
         }
     }
 
+    companion object {
+        fun render(activity : Activity) : BiCircleBallView {
+            val view : BiCircleBallView = BiCircleBallView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
