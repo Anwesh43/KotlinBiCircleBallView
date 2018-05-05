@@ -12,14 +12,16 @@ class BiCircleBallView(ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    override fun onDraw(canvas : Canvas) {
+    private val bcbRenderer : BCBRenderer = BCBRenderer(this)
 
+    override fun onDraw(canvas : Canvas) {
+        bcbRenderer.render(canvas, paint)
     }
 
     override fun onTouchEvent(event : MotionEvent) : Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                bcbRenderer.handleTap()
             }
         }
         return true
