@@ -112,4 +112,27 @@ class BiCircleBallView(ctx : Context) : View(ctx) {
         }
     }
 
+    data class BCBRenderer(var view : BiCircleBallView) {
+
+        private val bcb : BiCircleBall = BiCircleBall(1)
+
+        private val animator : BCBAnimator = BCBAnimator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            bcb.draw(canvas, paint)
+            animator.animate {
+                bcb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            bcb.startUpdating {
+                animator.start()
+            }
+        }
+    }
+
 }
