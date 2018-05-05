@@ -30,7 +30,7 @@ class BiCircleBallView(ctx : Context) : View(ctx) {
 
     data class BCBState(var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0) {
 
-        val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f)
+        val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f, 0f)
 
         fun update(stopcb : (Float) -> Unit) {
             scales[j] += dir * 0.1f
@@ -91,16 +91,22 @@ class BiCircleBallView(ctx : Context) : View(ctx) {
             paint.strokeWidth = Math.min(w, h) / 60
             paint.strokeCap = Paint.Cap.ROUND
             val size : Float = Math.min(w, h)/ 3
-            val r : Float = Math.min(w, h)/10
+            val r : Float = Math.min(w, h) / 20
+            val deg : Float = 90f * state.scales[2]
             canvas.save()
             canvas.translate(w/2, h/2)
             for (i in 0..1) {
-                val x : Float = -size * state.scales[1] * state.scales[3]
+                val x : Float = -size * state.scales[1] * (1 - state.scales[4])
                 canvas.save()
                 canvas.scale(1f - 2 * i,1f)
-                canvas.rotate(90f * state.scales[2])
+                canvas.save()
+                canvas.rotate(deg)
                 canvas.drawLine(0f, 0f, x, 0f, paint)
+                paint.style = Paint.Style.FILL
                 canvas.drawCircle(x, 0f, r * state.scales[0], paint)
+                canvas.restore()
+                paint.style = Paint.Style.STROKE
+                canvas.drawArc(RectF(-size, -size, size, size), 180f + deg * state.scales[3], deg * (1 - state.scales[3]), false, paint)
                 canvas.restore()
             }
             canvas.restore()
